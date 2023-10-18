@@ -58,7 +58,7 @@ class _AppState extends State<App> {
                   Row(
                     children: [
                       Column(
-                        children: [
+                        children: [ 
                           toggleText ? const MyNewWidget() : const Text('Nothing!', style: TextStyle(color: Colors.white,)),
                           IconButton(onPressed: toggle, icon: const Icon(Icons.remove_red_eye),color: Colors.white,),
                         ],
