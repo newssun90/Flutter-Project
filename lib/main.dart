@@ -6,14 +6,40 @@ void main() {
   runApp(const App());
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({super.key});
+
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  bool toggleText = true;
 
   @override
   Widget build(BuildContext context) {
     const fWhiteStyle = TextStyle(
         color: Colors.white, fontSize: 28, fontWeight: FontWeight.w600);
+
+    void toggle(){
+      setState(() {
+        print(toggleText);
+        toggleText = !toggleText;
+        print(toggleText);
+      });
+    }
+
     return MaterialApp(
+      //Theme
+      theme: ThemeData(
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(
+            color: Colors.amber,
+            fontSize: 30,
+          )
+        ),
+      ),
       home: Scaffold(
           backgroundColor: const Color.fromARGB(20, 151, 151, 151),
           body: SingleChildScrollView(
@@ -25,6 +51,20 @@ class App extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(
+                    height: 80,
+                  ),
+                  // 생명주기 sample
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          toggleText ? const MyNewWidget() : const Text('Nothing!', style: TextStyle(color: Colors.white,)),
+                          IconButton(onPressed: toggle, icon: const Icon(Icons.remove_red_eye),color: Colors.white,),
+                        ],
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: 80,
                   ),
@@ -144,5 +184,36 @@ class App extends StatelessWidget {
             ),
           )),
     );
+  }
+}
+
+class MyNewWidget extends StatefulWidget {
+  const MyNewWidget({
+    super.key,
+  });
+
+  @override
+  State<MyNewWidget> createState() => _MyNewWidgetState();
+}
+
+class _MyNewWidgetState extends State<MyNewWidget> {
+  @override
+  void initState() {
+    // 최초 initializing
+    super.initState();
+    print('1 - initState!');
+  }
+
+  @override
+  void dispose() {
+    // 이벤트 리스터 해제
+    super.dispose();
+    print('dispose!');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('2 - build!');
+    return Text('BuildContext Example!', style: Theme.of(context).textTheme.titleLarge,);
   }
 }
