@@ -1,14 +1,24 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:toonflix/main_simple.dart';
-import 'package:toonflix/services/api_service.dart';
 import 'package:toonflix/webtoon/home_toonflix.dart';
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..userAgent =
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36';
+  }
+}
+
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MaterialApp(
     title: 'Pro',
     home: App(),
   ));
-  ApiService().getTodaysToons();
 }
 
 class App extends StatelessWidget {
@@ -29,7 +39,7 @@ class App extends StatelessWidget {
           cardColor: const Color(0xFFF4EDDB),
         ),
         home: Scaffold(
-          body: const Center(
+          body: Center(
             //child: MyWidget(),
             child: ToonFlixWidget(),
           ),
