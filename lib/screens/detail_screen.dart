@@ -7,12 +7,14 @@ import 'package:toonflix/widgets/webtoon_episode_widget.dart';
 
 class DetailScreenWidget extends StatefulWidget {
   final String title, thumb, id;
+  final bool isFavorite;
 
   const DetailScreenWidget({
     super.key,
     required this.title,
     required this.thumb,
     required this.id,
+    required this.isFavorite,
   });
 
   @override
@@ -34,11 +36,11 @@ class _DetailScreenWidgetState extends State<DetailScreenWidget> {
     initPrefs();
   }
 
-  Future initPrefs() async{
+  Future initPrefs() async {
     preferences = await SharedPreferences.getInstance();
     final likedToons = preferences.getStringList('likedToons');
-    if(likedToons != null) {
-      if(likedToons.contains(widget.id)) {
+    if (likedToons != null) {
+      if (likedToons.contains(widget.id)) {
         setState(() {
           isLiked = true;
         });
@@ -50,8 +52,8 @@ class _DetailScreenWidgetState extends State<DetailScreenWidget> {
 
   onFavoritTap() async {
     final likedToons = preferences.getStringList('likedToons');
-    if(likedToons != null) {
-      if(isLiked) {
+    if (likedToons != null) {
+      if (isLiked) {
         likedToons.remove(widget.id);
       } else {
         likedToons.add(widget.id);
@@ -70,7 +72,13 @@ class _DetailScreenWidgetState extends State<DetailScreenWidget> {
       appBar: AppBar(
         centerTitle: true,
         actions: [
-          IconButton(onPressed: onFavoritTap, icon: isLiked ? const Icon(Icons.favorite) : const Icon(Icons.favorite_outline_outlined,)),
+          IconButton(
+              onPressed: onFavoritTap,
+              icon: isLiked
+                  ? const Icon(Icons.favorite)
+                  : const Icon(
+                      Icons.favorite_outline_outlined,
+                    )),
         ],
         title: Text(
           widget.title,
@@ -95,7 +103,7 @@ class _DetailScreenWidgetState extends State<DetailScreenWidget> {
               children: [
                 Hero(
                   // Hero
-                  tag: widget.id,
+                  tag: widget.isFavorite ? 'favorite_${widget.id}' : widget.id,
                   child: Container(
                     width: 150,
                     clipBehavior: Clip.hardEdge,
@@ -145,19 +153,23 @@ class _DetailScreenWidgetState extends State<DetailScreenWidget> {
                   }
                   return const Text('...');
                 }),
-                 const SizedBox(
-                  height: 20,
-                ),
-                FutureBuilder(future: episodes, builder: (context, snapshot) {
-                  if(snapshot.hasData){
-                    return Column(
-                      children: [
-                        for(var episode in snapshot.data!) EpisodeWidget(episode: episode, webtoonId: widget.id)
-                      ],
-                    );
-                  }
-                  return Container();
-                },),
+            const SizedBox(
+              height: 20,
+            ),
+            FutureBuilder(
+              future: episodes,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                    children: [
+                      for (var episode in snapshot.data!)
+                        EpisodeWidget(episode: episode, webtoonId: widget.id)
+                    ],
+                  );
+                }
+                return Container();
+              },
+            ),
           ]),
         ),
       ),

@@ -39,7 +39,7 @@ class App extends StatelessWidget {
           cardColor: const Color(0xFFF4EDDB),
         ),
         home: Scaffold(
-          body: Center(
+          body: const Center(
             //child: MyWidget(),
             child: ToonFlixWidget(),
           ),
