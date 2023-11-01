@@ -14,7 +14,7 @@ class ToonFlixWidget extends StatefulWidget {
 class _ToonFlixWidgetState extends State<ToonFlixWidget> {
   final Future<List<WebtoonModel>> webtoons = ApiService.getTodaysToons();
   late SharedPreferences preferences;
-  late List<String> likedToonId;
+  List<String> likedToonId = [];
   List<WebtoonModel> likedToonInfo = [];
 
   bool isFavorit = false;
